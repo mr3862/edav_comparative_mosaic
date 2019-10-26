@@ -1,0 +1,89 @@
+---
+  title: "Geom_Mosaic"
+output: html_document
+---
+  
+  ```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+library(ggmosaic)
+```
+
+## ggmosaic::geom_mosaic
+
+#### 1. Arguments
+geom_mosaic(mapping = NULL, data = NULL, stat = "mosaic",
+            position = "identity", na.rm = FALSE, divider = mosaic(), conds=NULL, offset = 0.01, show.legend = NA, inherit.aes = FALSE, ...)
+
+(a) mapping: aes(weight, x, y, fill)
+weight: Frequency, relative frequency, ...   #must be numeric
+which means the area of each mosaic
+x: x=product(col_1, col_2, col_3,...)
+y: no y value
+fill:col, used to split rectangle and color it, no fill no color
+conds: conds=product(col)   #condition
+
+either x and fill can split the graph
+(b) data: must be data.frame, can not use table
+(c) divider: vspine, hspine
+
+#### 2. Split direction
+(a) ~happy
+```{r fig.width=15}
+ggplot(data = happy) +
+  geom_mosaic(aes(weight = wtssall, x = product(happy)))
+```
+
+(b) ~happy+sex
+```{r fig.width=15}
+ggplot(data = happy) +
+  geom_mosaic(aes(weight = wtssall, x = product(happy, sex)))
+```
+
+
+
+(c) ~sex+happy|health
+```{r fig.width=15}
+ggplot(data = happy) +
+  geom_mosaic(aes(weight = wtssall, x = product(happy, sex, health)))
+```
+
+
+(d) ~happy|health + sex|marital  #product_col_1|product_col_3, product_col_2|product_col_4
+```{r fig.width=15}
+ggplot(data = happy) +
+  geom_mosaic(aes(weight = wtssall, x = product(happy, sex, health, marital)))
+```
+
+(e) ~happy|health + degree|sex|marital
+```{r fig.width=20}
+ggplot(data = happy) +
+  geom_mosaic(aes(weight = wtssall, x = product(happy, sex, health, marital), fill=degree))
+```
+
+
+(f) ~happy|health + degree|sex|marital
+```{r fig.width=20}
+ggplot(data = happy) +
+  geom_mosaic(aes(weight = wtssall, x = product(happy, sex, health, marital), fill=degree, conds=product(partyid)))
+```
+
+(g) ~degree|sex|partyid+happy|health|marital
+```{r fig.width=60}
+ggplot(data = happy) +
+  geom_mosaic(aes(weight = wtssall, x = product(happy, sex, health), fill=degree, conds=product(partyid, marital)), na.rm=TRUE)
+```
+
+In conclusion, the direction of splitting is based on the number of columns used on the function and the order of these columns.
+When the number of "x" columns is odd:
+  1) the "x" columns will be added to x-axis, y-axis, x-axis, ..., respectively;
+  2) the "fill" column will be added to the front of y-axis;
+  3) and the "conds" columns will be added to the end of y-axis or x-axis, which depends on the number of "conds" columns. When the number of "conds" columns is odd, the order of adding to the end of axis is x-axis, y-axis, x-axis, ...; when the number is even, the order is y-axis, x-axis, y-axis, x-axis, ...
+   
+When the number of "x" columns is even:
+  1) the "x" columns will be added to y-axis, x-axis, y-axis, ..., respectively;
+  2) the "fill" column will be added to the front of x-axis;
+  3) and the order of "conds" columns is oposite to the following situation, it will become y-axis, x-axis, y-axis,..., when the number of "conds" columns is odd; or x-axis, y-axis, x-axis, y-axis,..., when the number of "conds" columns is even.
+  
+The directions of these columns all depend on the rule that making sure the number of columns on x-axis will greater than or equal to the number on y-axis (|X|=|Y| or |X|=|Y|+1). And the first step for splitting is ordering the direction of "x" columns, and then "fill" columns, and finally "conds" columns. Besides, no matter which arguments' direction need to be determined, the most important thing is obeying the rule.
