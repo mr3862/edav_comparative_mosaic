@@ -8,82 +8,104 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 ```{r}
 library(ggmosaic)
+library(gridExtra)
+Titanic<-as.data.frame(Titanic)
+```
+geom_mosaic:
+
+gwom_mosaic is similar to mosaic, which is designed to display the relationship between categorical variables.
+
+
+The basic parameters of geom_mosaic is
+```{r eval=FALSE}
+geom_mosaic(mapping = NULL, data = NULL, stat = "mosaic", position = "identity", conds=NULL, na.rm = FALSE, divider = mosaic(), offset = 0.01, show.legend = NA, inherit.aes = FALSE, ...)
 ```
 
-## ggmosaic::geom_mosaic
+The following is  the  description of parameters:
 
-#### 1. Arguments
-geom_mosaic(mapping = NULL, data = NULL, stat = "mosaic",
-            position = "identity", na.rm = FALSE, divider = mosaic(), conds=NULL, offset = 0.01, show.legend = NA, inherit.aes = FALSE, ...)
+(1) mapping: in geom_mosaic, this is used to specify categorical varaibles and numeric variable to be displayed. The basic parameters of mapping is
+```{r eval=FALSE}
+aes(weight=NULL, x=NULL, fill=NULL)
+```
 
-(a) mapping: aes(weight, x, y, fill)
-weight: Frequency, relative frequency, ...   #must be numeric
-which means the area of each mosaic
-x: x=product(col_1, col_2, col_3,...)
-y: no y value
-fill:col, used to split rectangle and color it, no fill no color
-conds: conds=product(col)   #condition
+weight: select a weighting variable, it can be frequency, relative frequency or other similar weighting variables, but it must be numeric. In mosaic graph, this parameter is used to show the area of each splitting rectangle.
 
-either x and fill can split the graph
-(b) data: must be data.frame, can not use table
-(c) divider: vspine, hspine
-
-#### 2. Split direction
-(a) ~happy
+x: select variables to add to formula, which is used to assign categorical varaibles. The basic parameters of x is
+```{r eval=FALSE}
+x=product(col_1, col_2, col_3,...)
+```
+For example,
 ```{r fig.width=15}
-ggplot(data = happy) +
-  geom_mosaic(aes(weight = wtssall, x = product(happy)))
+ggplot(data = Titanic) +
+  geom_mosaic(aes(weight = Freq, x = product(Survived, Age, Sex)))
 ```
+The data is partinioned by Sex first, then Age, and finally Survived.
 
-(b) ~happy+sex
+fill: select a variable to be filled, it is used to color each rectangle in different colors, which is same to splitting each rectangle into two smaller rectangle and then coloring each smaller rectangle in the same parent rectangle in different colors. For example,
 ```{r fig.width=15}
-ggplot(data = happy) +
-  geom_mosaic(aes(weight = wtssall, x = product(happy, sex)))
+ggplot(data = Titanic) +
+  geom_mosaic(aes(weight = Freq, x = product(Survived, Age, Sex), fill=Class))
 ```
-
-
-
-(c) ~sex+happy|health
+In this example, the order of partition is Sex, Age, Survived, and then each rectangle splitted by Sex, Age and Survived will aldo be partitioned by Class into 4 smaller rectanglers and then color these smaller ones into four different colors.
+The most important thing for this parameter is that the direction of splitting depends on the number of patameters in x. In the above example, the number of patameters in x is 3, which is odd, then the data is partitioned by Class horizontally. While when the number of patameters in x is even, for example, it is 2,
 ```{r fig.width=15}
-ggplot(data = happy) +
-  geom_mosaic(aes(weight = wtssall, x = product(happy, sex, health)))
+ggplot(data = Titanic) +
+  geom_mosaic(aes(weight = Freq, x = product(Age, Sex), fill=Class))
 ```
+we can see the direction is now vertical.
 
-
-(d) ~happy|health + sex|marital  #product_col_1|product_col_3, product_col_2|product_col_4
+conds: select variables to condition on, which will be used first for splitting. The basic parameters of conds is
+```{r eval=FALSE}
+conds=product(col_1, col_2, ...)
+```
+For example,
 ```{r fig.width=15}
-ggplot(data = happy) +
-  geom_mosaic(aes(weight = wtssall, x = product(happy, sex, health, marital)))
+ggplot(data = Titanic) +
+  geom_mosaic(aes(weight = Freq, x = product(Age, Sex), conds=product(Class, Survived)))
+```
+In this example, the data is partitioned by variables in conds first, (Survived, then Class), and then by variables in x. 
+
+When variables in "product", then the order is always from the right most varible to the left most variable, not only in x but also in conds.
+
+And geom_mosaic is a little different to other geom_* functions, we don't need to and also can't specific y. In geom_mosaic, there is no y value.
+
+(2) data: only data frame can be used, no "table" or "ftable". If we want to use an object of "table", we must transfer it into dataframe. 
+```{r eval=FALSE}
+Titanic <- as.data.frame(Titanic)
+```
+And we can also put data in the function of ggplot.
+
+(3)na.rm: the default is "FALSE", which means it will not remove "NA"; while when it equals to "TURE", it will remove missing values.
+
+(4) divider: we have two methods to set divider.
+The first one is mosaic().The default of directions is first vertical and then horizontal, repeatedly. And we can also use divider to reset the directions of splitting. For example,
+```{r fig.width=15}
+ggplot(data = Titanic) +
+  geom_mosaic(aes(weight = Freq, x = product(Survived, Age, Sex)), divider = mosaic("v"))
+```
+The default parameter is "horizontal"(or "h"), the splitting directions is v-h-v-h-...; while when using "vertical"(or "v"), the directions will become h-v-h-v-.... In other words, it is transversed, varaibles in y-axis will be in x-axis, and varaibles in x-axis will be in y-axis.
+
+The second one is setting divider directly, hspine, vspine, vbar or hbar. But in this method, the data can only be splitted by one categorical variable. Using hspine or vspine, it is same to the original mosaic graph, which using vbar or hbar, it will be like bar chart.
+For example,
+```{r fig.width=15}
+p1<-ggplot(data = Titanic) +
+  geom_mosaic(aes(weight = Freq, x = product(Sex)), divider="hspine")+ggtitle("Hspine")
+p2<-ggplot(data = Titanic) +
+  geom_mosaic(aes(weight = Freq, x = product(Sex)), divider="hbar")+ggtitle("Hbar")
+grid.arrange(p1, p2, nrow = 1)
 ```
 
-(e) ~happy|health + degree|sex|marital
-```{r fig.width=20}
-ggplot(data = happy) +
-  geom_mosaic(aes(weight = wtssall, x = product(happy, sex, health, marital), fill=degree))
+(5)offset:set the space between the first spine, but at the same time, the space between other spines also will change in equal proportion. For example,
+```{r fig.width=15}
+g1<-ggplot(data = Titanic) +
+  geom_mosaic(aes(weight = Freq, x = product(Survived, Age, Sex)),offset = 0.01)+ggtitle("Offset=0.01")
+g2<-ggplot(data = Titanic) +
+  geom_mosaic(aes(weight = Freq, x = product(Survived, Age, Sex)),offset = 0.05)+ggtitle("Offset=0.1")
+grid.arrange(g1, g2, nrow = 1)
 ```
 
-
-(f) ~happy|health + degree|sex|marital
-```{r fig.width=20}
-ggplot(data = happy) +
-  geom_mosaic(aes(weight = wtssall, x = product(happy, sex, health, marital), fill=degree, conds=product(partyid)))
+Besides, geom_mosaic also has other similar features of ggplot, like it can use facet_* to facet. For example,
+```{r fig.width=15}
+ggplot(data = Titanic) +
+  geom_mosaic(aes(weight = Freq, x = product(Survived, Age, Sex)))+facet_grid(Class~.)
 ```
-
-(g) ~degree|sex|partyid+happy|health|marital
-```{r fig.width=60}
-ggplot(data = happy) +
-  geom_mosaic(aes(weight = wtssall, x = product(happy, sex, health), fill=degree, conds=product(partyid, marital)), na.rm=TRUE)
-```
-
-In conclusion, the direction of splitting is based on the number of columns used on the function and the order of these columns.
-When the number of "x" columns is odd:
-  1) the "x" columns will be added to x-axis, y-axis, x-axis, ..., respectively;
-  2) the "fill" column will be added to the front of y-axis;
-  3) and the "conds" columns will be added to the end of y-axis or x-axis, which depends on the number of "conds" columns. When the number of "conds" columns is odd, the order of adding to the end of axis is x-axis, y-axis, x-axis, ...; when the number is even, the order is y-axis, x-axis, y-axis, x-axis, ...
-   
-When the number of "x" columns is even:
-  1) the "x" columns will be added to y-axis, x-axis, y-axis, ..., respectively;
-  2) the "fill" column will be added to the front of x-axis;
-  3) and the order of "conds" columns is oposite to the following situation, it will become y-axis, x-axis, y-axis,..., when the number of "conds" columns is odd; or x-axis, y-axis, x-axis, y-axis,..., when the number of "conds" columns is even.
-  
-The directions of these columns all depend on the rule that making sure the number of columns on x-axis will greater than or equal to the number on y-axis (|X|=|Y| or |X|=|Y|+1). And the first step for splitting is ordering the direction of "x" columns, and then "fill" columns, and finally "conds" columns. Besides, no matter which arguments' direction need to be determined, the most important thing is obeying the rule.
