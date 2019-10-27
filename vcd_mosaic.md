@@ -1,17 +1,5 @@
-Comparative Study of vcd::mosaic and geom\_mosaic
+Comparative Study of vcd::mosaic and ggmosaic
 ================
-
-## GitHub Documents
-
-This is an R Markdown format used for publishing markdown documents to
-GitHub. When you click the **Knit** button all R code chunks are run and
-a markdown file (.md) suitable for publishing to GitHub is generated.
-
-``` r
-library(vcd)
-```
-
-    ## Loading required package: grid
 
 A mosaic plot is a graphical display that allows you to examine the
 relationship among two or more categorical variables. It is basically an
@@ -51,6 +39,12 @@ functions and some user friendly explainon of the paramters.
 
 We will use Titanic data to plot different mosaic plots.
 
+``` r
+library(vcd)
+```
+
+    ## Loading required package: grid
+
 vcd::mosaic:
 
 mosaic is one of the functions of strucplot framework which we can get
@@ -61,17 +55,19 @@ function.
 
 The basic parameters of mosaic is
 
-mosaic(x, condvars = NULL, split\_vertical = NULL, direction = NULL,
-spacing = NULL, spacing\_args = list(), gp = NULL, expected = NULL,
-shade = NULL, highlighting = NULL, highlighting\_fill = grey.colors,
-highlighting\_direction = NULL, zero\_size = 0.5, zero\_split = FALSE,
-zero\_shade = NULL, zero\_gp = gpar(col = 0), panel = NULL, main = NULL,
-sub = NULL, …)
+``` r
+mosaic(x, condvars = NULL,
+  split_vertical = NULL, direction = NULL, spacing = NULL,
+  spacing_args = list(), gp = NULL, expected = NULL, shade = NULL,
+  highlighting = NULL, highlighting_fill = grey.colors, highlighting_direction = NULL,
+  zero_size = 0.5, zero_split = FALSE, zero_shade = NULL,
+  zero_gp = gpar(col = 0), panel = NULL, main = NULL, sub = NULL, ...)
 
 OR
 
-mosaic(formula, data, highlighting = NULL, …, main = NULL, sub = NULL,
-subset = NULL, na.action = NULL)
+mosaic(formula, data, highlighting = NULL,
+  ..., main = NULL, sub = NULL, subset = NULL, na.action = NULL)
+```
 
 The following is the description of parameters:
 
@@ -82,20 +78,16 @@ specified in the dimnames(x) attribute, or an object of class
 from data frame using formula. For example,
 
 ``` r
-HEC <- structable(Eye ~ Sex + Hair, data = HairEyeColor)
+HEC <- structable(Survived ~ Sex + Age, data = Titanic)
 HEC
 ```
 
-    ##              Eye Brown Blue Hazel Green
-    ## Sex    Hair                            
-    ## Male   Black        32   11    10     3
-    ##        Brown        53   50    25    15
-    ##        Red          10   10     7     7
-    ##        Blond         3   30     5     8
-    ## Female Black        36    9     5     2
-    ##        Brown        66   34    29    14
-    ##        Red          16    7     7     7
-    ##        Blond         4   64     5     8
+    ##              Survived   No  Yes
+    ## Sex    Age                     
+    ## Male   Child            35   29
+    ##        Adult          1329  338
+    ## Female Child            17   28
+    ##        Adult           109  316
 
 formula a formula specifying the variables used to create a contingency
 table from data. For convenience, conditioning formulas can be
@@ -114,7 +106,7 @@ mosaic(Survived ~ Sex + Age, data = Titanic,
 main = "Survival on the Titanic")
 ```
 
-![](vcd_mosaic_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](vcd_mosaic_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
 In the above plot, the data is partinioned by sex first and then age;
 after that survival is used to show the dependency
@@ -123,7 +115,7 @@ after that survival is used to show the dependency
 mosaic(Survived ~ ., data = Titanic)
 ```
 
-![](vcd_mosaic_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](vcd_mosaic_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
 This type of formuall is used when one variable is needed to be
 highlighted based on rest of the varialbe. Survived is highlihgted based
@@ -151,7 +143,7 @@ this “direction” parameter. For example,
  mosaic(Survived ~ Sex + Age, data = Titanic, main = "Survival on the Titanic",direction=c("v","v","h"))
 ```
 
-![](vcd_mosaic_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](vcd_mosaic_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
 \# Sex = Vertical, Age = Vertical, Survived = Horizonal In the above
 plot, the sex variable is used to split the plot vertically, then age
@@ -173,7 +165,7 @@ mosaic(Survived~ Sex + Age, data = Titanic,
        direction=c("v","v","h"))
 ```
 
-![](vcd_mosaic_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](vcd_mosaic_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 if gp is provided with shade = TRUE (or no shade parameter but not shade
 = FALSE), the provided color along with other graphical paramters (if
@@ -186,7 +178,7 @@ mosaic(Survived~ Sex + Age, data = Titanic,
                  )
 ```
 
-![](vcd_mosaic_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](vcd_mosaic_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 shade  
 logical specifying whether gp should be used or not (see gp). If TRUE
@@ -206,11 +198,14 @@ mosaic(Survived~ Sex + Age, data = Titanic,
     ## Warning in strucplot(x, condvars = if (is.null(condvars)) NULL else
     ## length(condvars), : gp parameter ignored since shade = FALSE
 
-![](vcd_mosaic_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](vcd_mosaic_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
-Reference: 1)
-<https://pdfs.semanticscholar.org/2416/2c1a46669f94356854176ece8548bf7fb989.pdf>
-2)
-<https://ncss-wpengine.netdna-ssl.com/wp-content/themes/ncss/pdf/Procedures/NCSS/Mosaic_Plots.pdf>
-3) <https://en.wikipedia.org/wiki/Mosaic_plot> 4)
-<http://www.pmean.com/definitions/mosaic.htm>
+Reference:
+
+1)  <https://pdfs.semanticscholar.org/2416/2c1a46669f94356854176ece8548bf7fb989.pdf>
+
+2)  <https://ncss-wpengine.netdna-ssl.com/wp-content/themes/ncss/pdf/Procedures/NCSS/Mosaic_Plots.pdf>
+
+3)  <https://en.wikipedia.org/wiki/Mosaic_plot>
+
+4)  <http://www.pmean.com/definitions/mosaic.htm>

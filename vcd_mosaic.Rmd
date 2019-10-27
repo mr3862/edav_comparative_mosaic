@@ -1,16 +1,11 @@
 ---
-title: "Comparative Study of vcd::mosaic and geom_mosaic"
-output: html_document
+title: "Comparative Study of vcd::mosaic and ggmosaic"
+output: github_document
        
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-```
-
-
-```{r cars}
-library(vcd)
 ```
 
 
@@ -33,6 +28,10 @@ In the following sections, we are going to present a compatitive study of vcd::m
 
 We will use Titanic data to plot different mosaic plots.
 
+```{r cars}
+library(vcd)
+```
+
 vcd::mosaic:
 
 mosaic is one of the functions of strucplot framework which we can get from importing vcd R package.The main idea of strucplot is to visualize the tables’ cells arranged in rectangular form
@@ -40,7 +39,7 @@ structable objects. The “flattened” contingency table can be obtained using 
 
 
 The basic parameters of mosaic is
-
+```{r eval=FALSE}
 mosaic(x, condvars = NULL,
   split_vertical = NULL, direction = NULL, spacing = NULL,
   spacing_args = list(), gp = NULL, expected = NULL, shade = NULL,
@@ -52,6 +51,9 @@ OR
 
 mosaic(formula, data, highlighting = NULL,
   ..., main = NULL, sub = NULL, subset = NULL, na.action = NULL)
+```
+
+
  
 The following is  the  description of parameters:
 
@@ -61,7 +63,7 @@ a contingency table in array form, with optional category labels specified in th
 x is a table or formula. structable can also be deduced from data frame using formula. For example,
 
 ```{r}
-HEC <- structable(Eye ~ Sex + Hair, data = HairEyeColor)
+HEC <- structable(Survived ~ Sex + Age, data = Titanic)
 HEC
 ```
 
@@ -148,9 +150,13 @@ mosaic(Survived~ Sex + Age, data = Titanic,
 
 
 Reference:
+
 1) https://pdfs.semanticscholar.org/2416/2c1a46669f94356854176ece8548bf7fb989.pdf
+
 2) https://ncss-wpengine.netdna-ssl.com/wp-content/themes/ncss/pdf/Procedures/NCSS/Mosaic_Plots.pdf
+
 3) https://en.wikipedia.org/wiki/Mosaic_plot
+
 4) http://www.pmean.com/definitions/mosaic.htm
 
 
