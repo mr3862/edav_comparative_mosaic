@@ -10,5 +10,6 @@ In the study, we try to explain how to use these two functions to produce mosaic
 
 Finally, we showed which functins is better in which scenario. vcd::mosaic is better in some cases whereas geom_mosaic is better other cases based one the avaialbe data and the objective.
 
+
 The study is shown in the following url (including other necessary files):
 https://github.com/mr3862/edav_comparative_mosaic
