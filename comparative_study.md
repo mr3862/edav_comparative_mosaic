@@ -3,7 +3,7 @@ Comparative Study of vcd::mosaic and geom\_mosaic
 Jiaying Chen (jc5299) & Mamunur Rashid (mr3862)
 
 `vcd::mosaic` and `geom_mosaic` are two mostly used functions to create
-mosaic plot - a way of visualizing multivariate categorical data whcih
+mosaic plot - a way of visualizing multivariate categorical data which
 is an area-proportional visualization of frequencies, composed of tiles
 (or block) created by recursive vertical and horizontal splits of a
 rectangle. There are several functions available to produce mosaic plot
@@ -11,25 +11,24 @@ including mosaicplot - a generic function from base R function, mosaic
 from vcd (Visualizing Categorical Data) package, geom\_mosaic from
 ggmosaic package etc.
 
-Currently, there is limited online help or guidance to use those
-functions. The existing documentation of those functions is not
-user-friendly for the beginners. It has a limited number of examples and
+Currently, there is inadequate online help or guidance to use those
+functions. Moreover, the existing documentation of these functions is
+not user-friendly for beginners. It has a limited number of examples and
 test cases.
 
 In the following sections, we are going to discuss a comparative study
-of vcd::mosaic and geom\_mosaic. Our goal is to describe different
+of `vcd::mosaic` and `geom_mosaic`. Our goal is to describe different
 aspects of these functions with some user-friendly examples and detail
-explanation the parameters, and finally to compare ease of use of each
-of the functions.
+explanation of some of the parameters, and finally to compare
+ease-of-use & effectiveness of each of the functions.
 
-In this study, we try to explain how to use these two functions to
-produce different mosaic plots. We have elborate some of the necessary
-parameters/arguments in detail that are used in the functions. As a
-matter of fact, a new user will able to understand very easily what he
-needs to provide to the function. Finally, we showed which function is
-better in which scenario such as vcd::mosaic is better in some cases
-whereas geom\_mosaic is better other cases based one the avaialbe data
-and the objective.
+In this study, we tried to explain how to use these two functions to
+produce different mosaic plots. We have elaborated some of the necessary
+parameters/ arguments in detail that are used in the functions. As a
+matter of fact, it will be easy to learn for a new user. Finally, we
+showed which function is better in which scenario such as `vcd::mosaic`
+is better in some cases whereas `geom_mosaic` is better in other cases
+based on the available data and the objective.
 
 To demonstrate different aspects of these functions, we will use the
 Titanic dataset to plot different mosaic plots.
@@ -91,7 +90,7 @@ Some of the basic parameters/arguments are described in the following
 section:
 
 **x:**  
-a contingency table in array form, with optional category labels
+A contingency table in array form, with optional category labels
 specified in the dimnames(x) attribute, or an object of class
 “structable”.
 
@@ -110,9 +109,9 @@ HEC
     ## Female Child            17   28
     ##        Adult           109  316
 
-**formula: **
+**formula:**
 
-a formula specifying the variables used to create a contingency table
+A formula specifying the variables used to create a contingency table
 from data. For convenience, conditioning formulas can be specified; the
 conditioning variables will then be used first for splitting. If any, a
 specified response variable will be highlighted in the cells.
@@ -128,9 +127,10 @@ mosaic(Survived ~ Sex + Age, data = Titanic,
        main = "Survival on the Titanic")
 ```
 
-![](comparative_study_files/figure-gfm/unnamed-chunk-6-1.png)<!-- --> In
-the above plot, the data is partinioned by sex first and then age; after
-that survival is used to show the dependency.
+![](comparative_study_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+In the above plot, the data is partinioned by sex first and then age;
+after that survival is used to show the dependency.
 
 ``` r
 mosaic(Survived ~ ., data = Titanic)
@@ -143,7 +143,7 @@ highlighted based on rest of the varialbes. Survived is highlihgted
 based on all otther dependend variables.
 
 **data:**  
-either a data frame, or an object of class “table” or “ftable”. If we
+Either a data frame, or an object of class “table” or “ftable”. If we
 provide, structable contingency table, we do not need to provide data
 (df or table). If data is in a data frame, the count column must be
 called Freq.
@@ -175,7 +175,7 @@ In the above plot, the sex variable is used to split the plot
 vertically, then age variable is used to sub-devide verticaly and then
 survived sub-division is highlighted horizontally from the other side.
 
-**gp:** object of class “gpar”, shading function or a corresponding
+**gp:** Object of class “gpar”, shading function or a corresponding
 generating function (see details and shadings). Components of “gpar”
 objects are recycled as needed along the last splitting dimension.
 Ignored if shade = FALSE.
@@ -191,7 +191,7 @@ mosaic(Survived~ Sex + Age, data = Titanic,
 
 ![](comparative_study_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
-if gp is provided with shade = TRUE (or no shade parameter but not shade
+If gp is provided with shade = TRUE (or no shade parameter but not shade
 = FALSE), the provided color along with other graphical paramters (if
 provided any) will apply.
 
@@ -205,7 +205,7 @@ mosaic(Survived~ Sex + Age, data = Titanic,
 ![](comparative_study_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 **shade:**  
-logical specifying whether gp should be used or not (see gp). If TRUE
+Logical specifying whether gp should be used or not (see gp). If TRUE
 and expected is unspecified, a default model is fitted: if condvars (see
 strucplot) is specified, a corresponding conditional independence model,
 and else the total independence model.
@@ -289,7 +289,7 @@ ggplot(data = Titanic_df) +
 
 The data is partinioned by Sex first, then Age, and finally Survived.
 
-  - **fill:** select a variable to be filled, it is used to color each
+  - **fill:** Select a variable to be filled, it is used to color each
     rectangle in different colors, which is same to splitting each
     rectangle into two smaller rectangle and then coloring each smaller
     rectangle in the same parent rectangle in different colors. For
@@ -304,7 +304,7 @@ ggplot(data = Titanic_df) +
 
 ![](comparative_study_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
-  - **conds:** select variables to condition on, which will be used
+  - **conds:** Select variables to condition on, which will be used
     first for splitting. The basic parameters of conds is
 
 <!-- end list -->
@@ -345,12 +345,14 @@ ggplot(data = Titanic_df) +
 In this example, the order of partition is Sex, Age, Survived, and then
 each rectangle splitted by Sex, Age and Survived will also be
 partitioned by Class into 4 smaller rectanglers and then color these
-smaller ones into four different colors. The most important thing for
-this parameter is that the direction of splitting depends on the number
-of patameters in x. In the above example, the number of patameters in x
-is 3, which is odd, then the data is partitioned by Class horizontally.
-While when the number of patameters in x is even, for example, if it is
-2, we can see the direction is now vertical.
+smaller ones into four different colors.
+
+The most important thing for this parameter is that the direction of
+splitting depends on the number of patameters in x. In the above
+example, the number of patameters in x is 3, which is odd, then the data
+is partitioned by Class horizontally. While when the number of
+patameters in x is even, for example, if it is 2, we can see the
+direction is now vertical.
 
 ``` r
 ggplot(data = Titanic_df) +
@@ -384,6 +386,7 @@ ggplot(data = Titanic_df) +
 ```
 
 ![](comparative_study_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
+
 The default parameter is “horizontal”(or “h”), the splitting directions
 is v-h-v-h-…; while when using “vertical”(or “v”), the directions will
 become h-v-h-v-…. In other words, it is transversed, varaibles in y-axis
@@ -431,46 +434,59 @@ ggplot(data = Titanic_df) +
 
 ## vcd::mosaic vs geom\_mosaic – which one is better?
 
+  - **Type of data** `geom_mosaic` can only use data frame as its `data`
+    argument, however the type of data in `vcd::mosaic` can be data
+    frame or table.
+
   - **Handling variables used in partition**
 
 `geom_mosaic`, in fact ggplot2, is not capable of handling a different
 number of variables in aesthetics. `product`, a wrapper function for a
-list, is used as a work around for this.
+list, is used as a workaround for this. However, this workaround leads
+to issues with the labeling; those can be fixed manually though.
 
-However, this work around leads to issues with the labeling; those can
-be fixed manually though. On the other hand,`formualla` of `vcd::mosaic`
-is capable to handling a number of spliting variables and labeling is
-also very easy in this case.
+On the other hand, the `formualla` of `vcd::mosaic` is capable of
+handling a number of splitting variables and labeling is also very easy
+in this case.
 
-  - **Use of different layer including facatting**
+  - **Use of different layer including faceting**
 
 Since `geom_mosaic` is a faction of ggplot2, it inherits the layered
-mechanisom. So, we can plot mosaic with other plots. We can also use
-other grouping tehcnique like facetting.
+mechanism. So, we can plot mosaic with other plots. We can also use
+other grouping techniques like faceting.
 
   - **Order of splits** `vcd::mosaic` is much easier to control the
     order of split than `geom_mosaic`. `vcd::mosaic` uses formula
     (e.g. V3 \~ V1 + V2) to set the split order which has a clear
-    explaination of the position of the variables. On the other hand,
+    explanation of the position of the variables. On the other hand,
     `geom_mosaic` uses odd or even number of variables to decide the
-    split. If the number of patameters is odd, the data is partitioned
+    split. If the number of parameters is odd, the data is partitioned
     by the last dependent variable horizontally.
 
   - **Direction of splits**
 
-`vcd::mosaic` has a `direction` argument which directs split directions
-whether the varialbe should be split horizontally or vertically.
+`vcd::mosaic` has a `direction` argument that directs split directions
+whether the variable should be split horizontally or vertically.
 `geom_mosaic` has default direction to split the product variables. The
 default of directions is first vertical and then horizontal, repeatedly.
-`divider` is used to reset the directions of splitting; but different
-combination of splitting direction with varialbe is very challenging.
+`divider` is used to reset the directions of splitting, but a different
+combination of splitting direction with the variable is very challenging
 
   - **Color** In the use of color in different places (e.g. fill,
-    border), both functions have straightforward structure.
-    `geom_mosaic` also give a auto legand facility in the use of color.
+    border), both functions have a straightforward structure.
+    `geom_mosaic` also gives an auto legend facility in the use of
+    color.
 
-  - **offset** Setting offset and spacing, `geom_mosaic` is very use to
+  - **offset** Setting offset and spacing, `geom_mosaic` is very easy to
     work with.
+
+In conclusion, it’s easier to use `vcd::mosaic`, especially when setting
+the arguments of categorical variables and their splitting directions.
+What’s more, `vcd::mosaic` can also display the relationship between
+categorical variables more clearly. But `geom_mosaic` is integrated in
+ggplot2 as a geom which allows for faceting, layering, setting offset
+and so
+    on.
 
 **Reference:**
 
