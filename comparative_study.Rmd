@@ -2,7 +2,7 @@
 title: "Comparative Study of vcd::mosaic and geom_mosaic"
 author: "Jiaying Chen (jc5299) & Mamunur Rashid (mr3862)"
 
-output: md_document
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
